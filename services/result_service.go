@@ -25,7 +25,7 @@ type resultService struct {
 }
 
 func (r *resultService) GetAll(page, size int) []models.LtResult {
-	return r.GetAll(page, size)
+	return r.dao.GetAll(page, size)
 }
 
 func (r *resultService) CountAll() int64 {

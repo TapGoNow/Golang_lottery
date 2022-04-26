@@ -5,6 +5,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"lottery/comm"
+	"lottery/models"
 	"lottery/services"
 )
 
@@ -49,6 +50,18 @@ func (c *AdminBlackIpController) Get() mvc.Result {
 	}
 }
 
+// GET /admin/blackip/black?id=1&time=0
 func (c *AdminBlackIpController) GetBlack() mvc.Result {
-
+	id, err := c.Ctx.URLParamInt("id")
+	t := c.Ctx.URLParamIntDefault("time", 0)
+	if err == nil {
+		if t > 0 {
+			t = t*86400 + comm.NowUnix()
+		}
+		c.BlackIpService.Update(&models.LtBlackip{Id: id, Blacktime: t, SysUpdated: comm.NowUnix()},
+			[]string{"blacktime"})
+	}
+	return mvc.Response{
+		Path: "/admin/blackip",
+	}
 }
